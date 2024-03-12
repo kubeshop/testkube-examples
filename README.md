@@ -1,3 +1,1 @@
-# testkube-examples
-
-Some files and dirs examples
+# Testkube Examples
