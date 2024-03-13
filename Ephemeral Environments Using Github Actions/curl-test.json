@@ -1,0 +1,9 @@
+{
+    "command": [
+      "curl",
+      "$NGINX_URL",
+      "-H",
+      "'Accept: text/html'"
+    ],
+    "expected_status": "200"
+  }
