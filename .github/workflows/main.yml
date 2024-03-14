@@ -14,7 +14,7 @@ jobs:
 
       - name: Deploy Sample Application
         run: |
-          kubectl apply -f nginx-deployment.yaml
+          kubectl apply -f https://raw.githubusercontent.com/kubeshop/testkube-examples/main/Ephemeral%20Environments%20Using%20Github%20Actions/nginx-deployment.yaml
 
       - name: Setup Testkube with Helm
         run: |
