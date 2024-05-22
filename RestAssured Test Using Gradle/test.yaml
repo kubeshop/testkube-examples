@@ -1,0 +1,26 @@
+kind: TestWorkflow
+apiVersion: testworkflows.testkube.io/v1
+metadata:
+  name: gradle-restassured
+  namespace: testkube
+  labels:
+    test-workflow-templates: "yes"
+spec:
+  use:
+  - name: official--gradle--beta
+    config:
+      run: ./gradlew test
+      version: 8.5.0-jdk11
+  content:
+    git:
+      uri: https://github.com/kubeshop/testkube-examples.git
+      revision: main
+      paths:
+      - RestAssured Test Using Gradle
+  container:
+    workingDir: /data/repo/RestAssured Test Using Gradle
+  steps:
+  - artifacts:
+      workingDir: /data/repo/RestAssured Test Using Gradle/app/build/
+      paths:
+      - '**/*'
