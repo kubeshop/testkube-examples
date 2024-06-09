@@ -3,6 +3,8 @@ apiVersion: testworkflows.testkube.io/v1
 metadata:
   name: postman-workflow
   namespace: testkube
+  labels:
+    test-workflow-templates: "yes"
 spec:
   use:
   - name: official--postman--beta
@@ -13,11 +15,13 @@ spec:
   content:
     git:
       uri: https://github.com/kubeshop/testkube-examples.git
-      revision: master
+      revision: main
+      paths:
+      - postman-workflow
   container:
-    workingDir: /data/repo/
+    workingDir: /data/repo/postman-workflow
     env:
     - name: id
-      value: "2"
+      value: "3"
     - name: url
       value: api.restful-api.dev
