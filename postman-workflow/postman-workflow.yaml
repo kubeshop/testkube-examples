@@ -12,7 +12,7 @@ spec:
       version: 6-alpine
   content:
     git:
-      uri: https://github.com/kubeshop/postman-workflow.git
+      uri: https://github.com/kubeshop/testkube-examples.git
       revision: master
   container:
     workingDir: /data/repo/
