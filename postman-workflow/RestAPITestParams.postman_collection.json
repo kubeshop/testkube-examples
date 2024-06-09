@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "e76c35c1-2c9b-46d6-bad8-c0438000824f",
+		"name": "RestAPIParamsTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetAllObjects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check the HTTP status code",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Check the number of items returned",
+							"pm.test(\"Item count is 13\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(13);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetObjectsById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check the HTTP status code",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Get the IDs from the request URL",
+							"var requestUrl = pm.request.url;",
+							"var regex = /id=(\\d+)/g;",
+							"var requestedIds = [];",
+							"var match;",
+							"",
+							"while ((match = regex.exec(requestUrl)) !== null) {",
+							"    requestedIds.push(match[1]);",
+							"}",
+							"",
+							"// Check if the items returned have the correct IDs",
+							"pm.test(\"Items have correct IDs\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    ",
+							"    jsonData.forEach(function(item) {",
+							"        pm.expect(requestedIds).to.include(item.id);",
+							"    });",
+							"});",
+							"",
+							"// Check if the number of items returned matches the number of IDs in the request",
+							"pm.test(\"Number of items returned matches number of IDs in request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(requestedIds.length);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects?id={{id}}",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSingleObject",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check the HTTP status code",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Check if the name of the object is \"Apple iPhone 12 Pro Max\"",
+							"pm.test(\"Object name is 'Apple iPhone 12 Pro Max'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Apple iPhone 12 Pro Max\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/{{id}}",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

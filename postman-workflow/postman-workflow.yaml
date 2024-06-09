@@ -1,0 +1,23 @@
+kind: TestWorkflow
+apiVersion: testworkflows.testkube.io/v1
+metadata:
+  name: postman-workflow
+  namespace: testkube
+spec:
+  use:
+  - name: official--postman--beta
+    config:
+      run: newman run RestAPITestParams.postman_collection.json --env-var "id=${id}"
+        --env-var "url=${url}"
+      version: 6-alpine
+  content:
+    git:
+      uri: https://github.com/kubeshop/postman-workflow.git
+      revision: master
+  container:
+    workingDir: /data/repo/
+    env:
+    - name: id
+      value: "2"
+    - name: url
+      value: api.restful-api.dev
