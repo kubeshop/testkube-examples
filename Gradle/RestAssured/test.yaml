@@ -16,11 +16,11 @@ spec:
       uri: https://github.com/kubeshop/testkube-examples.git
       revision: main
       paths:
-      - RestAssured Test Using Gradle
+      - Gradle/RestAssured
   container:
-    workingDir: /data/repo/RestAssured Test Using Gradle
+    workingDir: /data/repo/Gradle/RestAssured
   steps:
   - artifacts:
-      workingDir: /data/repo/RestAssured Test Using Gradle/app/build/
+      workingDir: /data/repo/Gradle/RestAssured/app/build/
       paths:
       - '**/*'
