@@ -1,0 +1,28 @@
+kind: TestWorkflow
+apiVersion: testworkflows.testkube.io/v1
+metadata:
+  name: gatling-testkube
+  namespace: testkube
+  labels:
+    test-workflow-templates: "yes"
+spec:
+  use:
+  - name: official--gradle--v1
+    config:
+      run: ./gradlew gatlingRun
+      version: 8.7.0-jdk21-alpine
+  content:
+    git:
+      uri: https://github.com/kubeshop/testkube-examples.git
+      revision: main
+      paths:
+      - Gradle/Gatling/Simple
+  container:
+    workingDir: /data/repo/Gradle/Gatling/Simple
+  steps:
+  - name: Saving artifacts
+    condition: always
+    artifacts:
+      paths:
+      - /data/repo/Gradle/Gatling/Simple/build/reports/**
+status: {}
