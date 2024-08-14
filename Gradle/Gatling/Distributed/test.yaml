@@ -1,0 +1,54 @@
+kind: TestWorkflow
+apiVersion: testworkflows.testkube.io/v1
+metadata:
+  name: gatling-testkube-distributed
+  namespace: testkube
+  labels:
+    docs: example
+spec:
+  config:
+    duration:
+      type: string
+      default: 5s
+    vus:
+      type: integer
+      default: 10
+    workers:
+      type: integer
+      default: 3
+  content:
+    git:
+      uri: https://github.com/kubeshop/testkube-examples.git
+      revision: main
+      paths:
+      - Gradle/Gatling/Distributed
+  container:
+    env:
+    - name: vus
+      value: '{{config.vus}}'
+    - name: duration
+      value: '{{config.duration}}'
+  steps:
+  - name: Run test
+    parallel:
+      count: config.workers
+      transfer:
+      - from: /data/repo/Gradle/Gatling/Distributed
+      use:
+      - name: distribute/evenly
+      container:
+        workingDir: /data/repo/Gradle/Gatling/Distributed
+        resources:
+          requests:
+            cpu: 128m
+            memory: 128Mi
+      paused: true
+      run:
+        image: gradle
+        shell: |
+          ./gradlew gatlingRun
+      artifacts:
+        workingDir: /data/repo/Gradle/Gatling/Distributed/build/reports/
+        paths:
+        - '**/*'
+status: {}
