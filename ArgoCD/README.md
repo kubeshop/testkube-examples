@@ -1,10 +1,12 @@
-# K6 Test Workflow with ArgoCD
+# Test Workflow with ArgoCD
 
-This folder contains a K6 test workflow file, `basic-k6.yaml` which automates running K6 load tests in your environment. We will use this repo as part of and ArgoCD application.
+This folder contains k6, Playwright and Postman test workflows which automates running respective tests in your environment. We will use this repo as part of and ArgoCD application.
 
 ## Folder Contents
 
-- `basic-k6.yaml`: The K6 test workflow file for aload testing.
+- `basic-k6.yaml`: k6 test workflow file for load testing.
+- `basic-playwright.yaml`: Playwright test workflow file for functional tests.
+- `basic-postman.yaml`: Postman test workflow file for API tests.
 
 ## Prerequisites
 
@@ -18,7 +20,7 @@ Before setting up the workflow, ensure you have the following:
 Follow these steps to set up and configure the K6 test workflow with ArgoCD:
 
 1. Clone this repository to your local machine.
-2. Create a new ArgoCD application for the K6 test workflow - *this allows ArgoCD to track the test.yaml file and deploy the workflow to your Kubernetes cluster*.
+2. Create a new ArgoCD application for all the test workflow - *this allows ArgoCD to track the yaml files and deploy the workflows to your Kubernetes cluster*.
 3. After the application is created, sync it with your repository to deploy the workflow.
 4. Monitor the deployment using ArgoCD’s web UI or CLI.
 5. Once the workflow is deployed, you can trigger the test workflow using testkube cli or dashboard.
