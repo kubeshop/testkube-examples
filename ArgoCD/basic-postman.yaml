@@ -26,4 +26,3 @@ spec:
       - run
       - postman-executor-smoke-without-envs.postman_collection.json
 status: {}
-b
