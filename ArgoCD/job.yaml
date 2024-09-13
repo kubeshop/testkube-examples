@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: testkube-execute-testworkflows-
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: execute-testworkflows
+        image: kubeshop/testkube-cli:latest
+        env:
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: testkube-secrets
+              key: apiToken
+        - name: ENVIRONMENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: testkube-secrets
+              key: environmentId
+        - name: ORGANIZATION_ID
+          valueFrom:
+            secretKeyRef:
+              name: testkube-secrets
+              key: organizationId
+        - name: ROOT_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: testkube-secrets
+              key: rootDomain
+        command:
+        - /bin/sh
+        - -c
+        - |
+          testkube set context \
+            --api-key ${API_TOKEN} \
+            --root-domain ${ROOT_DOMAIN} \
+            --org-id ${ORGANIZATION_ID} \
+            --env-id ${ENVIRONMENT_ID}
+
+          testkube run tw basic-k6-workflow -f
+          testkube run tw basic-playwright-workflow -f
+          testkube run tw basic-postman-workflow -f
+      restartPolicy: Never
+  backoffLimit: 2
