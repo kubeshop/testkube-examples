@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: execute-testworkflows
-        image: kubeshop/testkube-cli:latest
+        image: kubeshop/testkube-cli:2.1.19
         env:
         - name: API_TOKEN
           valueFrom:
