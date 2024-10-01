@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: testkube-experiment-analysis
+spec:
+  metrics:
+  - name: run-testkube-workflows
+    provider:
+      job:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: execute-testkube
+                image: kubeshop/testkube-cli:2.1.19
+                env:
+                - name: API_TOKEN
+                  value: "<your-API-token>"
+                - name: ENVIRONMENT_ID
+                  value: "<your-environment-ID>"
+                - name: ORGANIZATION_ID
+                  value: "<your-organization-ID>"
+                - name: ROOT_DOMAIN
+                  value: "testkube.io"
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  testkube set context \
+                    --api-key ${API_TOKEN} \
+                    --root-domain ${ROOT_DOMAIN} \
+                    --org-id ${ORGANIZATION_ID} \
+                    --env-id ${ENVIRONMENT_ID}
+
+                  # Run the desired Testkube workflows during the experiment
+                  testkube run tw basic-k6-workflow -f || exit 1
+
+              restartPolicy: Never
+          backoffLimit: 2
+    successCondition: "result.exitCode == 0"  # Exit code 0 for success
+    failureCondition: "result.exitCode == 1"  # Exit code 1 for failure
+    interval: 1m
+    count: 1
