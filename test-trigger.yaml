@@ -8,7 +8,7 @@ spec:
   resourceSelector:
     labelSelector:
       matchLabels:
-        testkube.io/tier: backend
+        tapp: nginx
   event: modified
   conditionSpec:
     timeout: 100
