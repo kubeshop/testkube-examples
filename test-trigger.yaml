@@ -8,7 +8,7 @@ spec:
   resourceSelector:
     labelSelector:
       matchLabels:
-        tapp: nginx
+        app: nginx
   event: modified
   conditionSpec:
     timeout: 100
