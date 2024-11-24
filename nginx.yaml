@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: nginx
+        testkube.io/tier: backend
     spec:
       containers:
         - name: nginx
