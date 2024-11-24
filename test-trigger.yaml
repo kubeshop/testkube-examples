@@ -21,7 +21,7 @@ spec:
       - type: Available
         status: "True"
   action: run
-  execution: workflow
+  execution: testworkflow
   concurrencyPolicy: allow
   testSelector:
     name: basic-k6-workflow
