@@ -5,6 +5,8 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   name: test-workflows
   namespace: argocd
+  labels:
+    argocd.argoproj.io/project: demo
 spec:
   project: default
   source:
