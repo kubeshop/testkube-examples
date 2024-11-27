@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: testkube-experiment-analysis
+  namespace: testkube-demo
 spec:
   metrics:
   - name: run-testkube-workflows
@@ -15,13 +16,25 @@ spec:
                 image: kubeshop/testkube-cli:2.1.19
                 env:
                 - name: API_TOKEN
-                  value: "<your-API-token>"
+                  valueFrom:
+                    secretKeyRef:
+                      name: testkube-secrets
+                      key: apiToken
                 - name: ENVIRONMENT_ID
-                  value: "<your-environment-ID>"
+                  valueFrom:
+                    secretKeyRef:
+                      name: testkube-secrets
+                      key: environmentId
                 - name: ORGANIZATION_ID
-                  value: "<your-organization-ID>"
+                  valueFrom:
+                    secretKeyRef:
+                      name: testkube-secrets
+                      key: organizationId
                 - name: ROOT_DOMAIN
-                  value: "testkube.io"
+                  valueFrom:
+                    secretKeyRef:
+                      name: testkube-secrets
+                      key: rootDomain
                 command:
                 - /bin/sh
                 - -c
