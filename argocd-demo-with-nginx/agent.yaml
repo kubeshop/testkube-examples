@@ -1,0 +1,71 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: testkube-demo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/project: demo
+spec:
+  project: default
+  source:
+    path: charts/testkube
+    repoURL: https://github.com/kubeshop/helm-charts
+    targetRevision: main
+    helm:
+      releaseName: testkube-agent
+      values: |
+        mongodb:
+          enabled: false
+        testkube-dashboard:
+          enabled: false
+        testkube-operator:
+          enabled: false
+        testkube-api:
+          multinamespace:
+            enabled: true
+          minio:
+            enabled: false
+          cloud:
+            url: agent.testkube.io:443
+            tls:
+              enabled: true
+            key: tkcagnt_aef7f7db14fcd2d7333ed456a0e357
+            orgId: tkcorg_d41cda4aec258112
+            envId: tkcenv_288b4aff32f23dd3
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    automated:
+      prune: true
+      selfHeal: true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      jqPathExpressions:
+        - .spec.metrics[].resource.name | select((. == "cpu") or (. == "memory"))
+    - group: apps
+      kind: Deployment
+      jqPathExpressions:
+        - .spec.template.spec.containers[]?.resources
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.template.spec.containers[]?.resources
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[]?.apiVersion
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[]?.kind
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: testkube-demo

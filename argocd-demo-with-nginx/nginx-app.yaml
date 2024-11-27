@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: nginx-app
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/project: demo
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/kubeshop/testkube-examples
+    path: nginx-app-example
+    directory:
+      exclude: '{README.md}'
+    targetRevision: nginx-app-example
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      jqPathExpressions:
+        - .spec.metrics[].resource.name | select((. == "cpu") or (. == "memory"))
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: testkube-demo
