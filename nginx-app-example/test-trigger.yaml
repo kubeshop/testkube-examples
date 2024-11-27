@@ -24,4 +24,4 @@ spec:
   execution: testworkflow
   concurrencyPolicy: allow
   testSelector:
-    name: curl-demo
+    name: nginx-curl
