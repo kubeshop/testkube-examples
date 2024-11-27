@@ -12,8 +12,6 @@ spec:
   source:
     repoURL: https://github.com/kubeshop/testkube-examples
     path: nginx-app-example
-    directory:
-      exclude: '{job.yaml}'
     targetRevision: nginx-app-example
   syncPolicy:
     automated:
