@@ -16,11 +16,11 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      deploymnet: rollout-bluegreen
+      app: rollout-bluegreen
   template:
     metadata:
       labels:
-        deploymnet: rollout-bluegreen
+        app: rollout-bluegreen
     spec:
       containers:
       - name: rollouts-demo
