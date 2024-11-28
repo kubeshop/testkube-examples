@@ -37,6 +37,7 @@ metadata:
 spec:
   selector:
     app: nginx
+    app: rollout-bluegreen
   ports:
     - protocol: TCP
       port: 8090
