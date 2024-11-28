@@ -8,11 +8,11 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 50
+      - setWeight: 30
       - pause: {duration: 10}
       # The second step is the experiment which starts a single canary pod
       - experiment:
-          duration: 5m
+          duration: 3m
           templates:
           - name: canary
             specRef: canary

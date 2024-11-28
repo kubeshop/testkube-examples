@@ -42,6 +42,21 @@ spec:
       port: 8090
       targetPort: 80
   type: NodePort
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollout-bluegreen-preview
+  namespace: testkube-demo
+spec:
+  selector:
+    app: rollout-bluegreen
+  ports:
+    - protocol: "TCP"
+      port: 8090
+      targetPort: 80
+  type: NodePort
 
 ---
 apiVersion: networking.k8s.io/v1
