@@ -36,8 +36,7 @@ metadata:
   namespace: testkube-demo
 spec:
   selector:
-    app: nginx
-    app: rollout-bluegreen
+    deploymnet: rollout-bluegreen
   ports:
     - protocol: TCP
       port: 8090
@@ -52,7 +51,7 @@ metadata:
   namespace: testkube-demo
 spec:
   selector:
-    app: rollout-bluegreen
+    deploymnet: rollout-bluegreen
   ports:
     - protocol: "TCP"
       port: 8090

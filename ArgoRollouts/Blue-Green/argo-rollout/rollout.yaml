@@ -8,7 +8,7 @@ spec:
   strategy:
     blueGreen:
       activeService: nginx-service
-      previewService: nginx-service-preview
+      previewService: rollout-bluegreen-preview
       autoPromotionEnabled: false
       prePromotionAnalysis:
         templates:
@@ -16,11 +16,11 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: rollout-bluegreen
+      deploymnet: rollout-bluegreen
   template:
     metadata:
       labels:
-        app: rollout-bluegreen
+        deploymnet: rollout-bluegreen
     spec:
       containers:
       - name: rollouts-demo
