@@ -4,7 +4,7 @@ metadata:
   name: rollout-bluegreen
   namespace: testkube-demo
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     blueGreen:
       activeService: nginx-service

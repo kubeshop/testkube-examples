@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: rollout-experiment
+  name: rollout-canary
   namespace: testkube-demo
 spec:
   replicas: 2
@@ -9,10 +9,10 @@ spec:
     canary:
       steps:
       - setWeight: 30
-      - pause: {duration: 10}
+      - pause: {duration: 5}
       # The second step is the experiment which starts a single canary pod
       - experiment:
-          duration: 3m
+          duration: 2m
           templates:
           - name: canary
             specRef: canary
@@ -26,14 +26,14 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: rollout-experiment
+      app: rollout-canary
   template:
     metadata:
       labels:
-        app: rollout-experiment
+        app: rollout-canary
     spec:
       containers:
-      - name: rollout-experiment
+      - name: rollout-canary
         image: yuliapjv/custom-nginx:1.0
         imagePullPolicy: Always
         ports:
