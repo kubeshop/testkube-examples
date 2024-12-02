@@ -24,4 +24,4 @@ spec:
   execution: testworkflow
   concurrencyPolicy: allow
   testSelector:
-    name: nginx-curl
+    name: basic-k6-workflow
