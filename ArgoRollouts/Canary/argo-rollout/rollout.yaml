@@ -10,17 +10,14 @@ spec:
       steps:
       - setWeight: 30
       - pause: {duration: 5}
-      # The second step is the experiment which starts a single canary pod
-      - experiment:
-          duration: 2m
-          templates:
-          - name: canary
-            specRef: canary
-          # This experiment performs its own analysis by referencing an AnalysisTemplates
-          # The success or failure of these runs will progress or abort the rollout respectively.
-          analyses:
-          - name: canary-experiment
-            templateName: testkube-experiment-analysis
+#      - experiment:
+#          duration: 2m
+#          templates:
+#          - name: canary # will launch a canary ReplicaSets and will run it for 2 min
+#            specRef: canary
+      analyses:
+      - name: canary-experiment
+        templateName: testkube-experiment-analysis
       - setWeight: 100
       - pause: {duration: 10}
   revisionHistoryLimit: 2
@@ -38,3 +35,17 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollout-nginx-svc
+spec:
+  selector:
+    app: rollout-experiment
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 5000
+  type: NodePort
