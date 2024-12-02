@@ -41,7 +41,7 @@ spec:
     - protocol: TCP
       port: 8090
       targetPort: 80
-  type: ClusterIP
+  type: LoadBalancer
 
 ---
 apiVersion: networking.k8s.io/v1
