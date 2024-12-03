@@ -13,7 +13,8 @@ spec:
     repoURL: https://github.com/kubeshop/testkube-examples
     path: TestTrigger-Argo-demo/nginx
     targetRevision: main
-    exclude: '{postSyncHook.yaml,testTrigger.yaml}'
+    directory:
+      exclude: '{postSyncHook.yaml,testTrigger.yaml}'
   syncPolicy:
     automated:
       prune: false
