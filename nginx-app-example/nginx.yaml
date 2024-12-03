@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: argocd-nginx-deployment
   namespace: testkube-demo
   labels:
     app: nginx
@@ -32,7 +32,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: argocd-nginx-service
   namespace: testkube-demo
 spec:
   selector:
@@ -43,29 +43,3 @@ spec:
     targetPort: 80
   type: ClusterIP
 
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nginx-ingress
-  namespace: testkube-demo
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-edge
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'false'
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - argocd-demo.testkube.dev
-      secretName: argocd-demo-tls
-  rules:
-    - host: argocd-demo.testkube.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx-service
-                port:
-                  number: 80

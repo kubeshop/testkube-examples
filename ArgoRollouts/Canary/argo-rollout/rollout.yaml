@@ -7,19 +7,13 @@ spec:
   replicas: 2
   strategy:
     canary:
+      analysis:
+        templates:
+          - templateName: testkube-experiment-analysis
       steps:
       - setWeight: 30
-      - pause: {duration: 5}
-#      - experiment:
-#          duration: 2m
-#          templates:
-#          - name: canary # will launch a canary ReplicaSets and will run it for 2 min
-#            specRef: canary
-      analyses:
-      - name: canary-experiment
-        templateName: testkube-experiment-analysis
+      - pause: {duration: 1m}
       - setWeight: 100
-      - pause: {duration: 10}
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -35,17 +29,3 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rollout-nginx-svc
-spec:
-  selector:
-    app: rollout-experiment
-  ports:
-    - protocol: "TCP"
-      port: 80
-      targetPort: 5000
-  type: NodePort
