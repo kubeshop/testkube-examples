@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: testkube-experiment-analysis
+  namespace: testkube-demo
+spec:
+  metrics:
+    - name: run-testkube-workflows
+      provider:
+        job:
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: execute-testkube
+                    image: kubeshop/testkube-cli:2.1.19
+                    env:
+                      - name: API_TOKEN
+                        valueFrom:
+                          secretKeyRef:
+                            name: testkube-secrets
+                            key: apiToken
+                      - name: ENVIRONMENT_ID
+                        valueFrom:
+                          secretKeyRef:
+                            name: testkube-secrets
+                            key: environmentId
+                      - name: ORGANIZATION_ID
+                        valueFrom:
+                          secretKeyRef:
+                            name: testkube-secrets
+                            key: organizationId
+                      - name: ROOT_DOMAIN
+                        valueFrom:
+                          secretKeyRef:
+                            name: testkube-secrets
+                            key: rootDomain
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        testkube set context \
+                          --api-key ${API_TOKEN} \
+                          --root-domain ${ROOT_DOMAIN} \
+                          --org-id ${ORGANIZATION_ID} \
+                          --env-id ${ENVIRONMENT_ID}
+
+                        # Run the desired Testkube workflows during the experiment
+                        testkube run tw k6-failure-missing-env -f || exit 1
+
+                restartPolicy: Never
+            backoffLimit: 2
+      successCondition: "result.exitCode == 0"  # Exit code 0 for success
+      failureCondition: "result.exitCode == 1"  # Exit code 1 for failure
+      interval: 1m
+      count: 1

@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: testkube-execute-testworkflows-
+  namespace: testkube-demo
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: execute-testworkflows
+          image: kubeshop/testkube-cli:2.1.19
+          env:
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: testkube-secrets
+                  key: apiToken
+            - name: ENVIRONMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: testkube-secrets
+                  key: environmentId
+            - name: ORGANIZATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: testkube-secrets
+                  key: organizationId
+            - name: ROOT_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: testkube-secrets
+                  key: rootDomain
+          command:
+            - /bin/sh
+            - -c
+            - |
+              testkube set context \
+                --api-key ${API_TOKEN} \
+                --root-domain ${ROOT_DOMAIN} \
+                --org-id ${ORGANIZATION_ID} \
+                --env-id ${ENVIRONMENT_ID}
+
+              testkube run tw curl-success -f
+      restartPolicy: Never
+  backoffLimit: 2

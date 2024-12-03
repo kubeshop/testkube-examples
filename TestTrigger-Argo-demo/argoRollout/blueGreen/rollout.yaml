@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-bluegreen
+  namespace: testkube-demo
+spec:
+  replicas: 1
+  strategy:
+    blueGreen:
+      activeService: nginx-service
+      autoPromotionEnabled: false
+      prePromotionAnalysis:
+        templates:
+          - templateName: testkube-experiment-analysis
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: rollout-bluegreen
+  template:
+    metadata:
+      labels:
+        app: rollout-bluegreen
+    spec:
+      containers:
+        - name: rollouts-bg
+          image: yuliapjv/custom-nginx:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-bg
+  namespace: testkube-demo
+spec:
+  selector:
+    app: rollout-bluegreen
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-bg
+  namespace: testkube-demo
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-edge
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'false'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - argo-rollouts-bg.testkube.dev
+      secretName: argocd-rollouts-bg-tls
+  rules:
+    - host: argo-rollouts-bg.testkube.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service-bg
+                port:
+                  number: 80

@@ -1,0 +1,27 @@
+apiVersion: tests.testkube.io/v1
+kind: TestTrigger
+metadata:
+  name: testtrigger-example
+  namespace: testkube-demo
+spec:
+  resource: deployment
+  resourceSelector:
+    labelSelector:
+      matchLabels:
+        app: nginx
+  event: modified
+  conditionSpec:
+    timeout: 100
+    delay: 2
+    conditions:
+      - type: Progressing
+        status: "True"
+        reason: "NewReplicaSetAvailable"
+        ttl: 60
+      - type: Available
+        status: "True"
+  action: run
+  execution: testworkflow
+  concurrencyPolicy: allow
+  testSelector:
+    name: postman-workflow-smoke-success
