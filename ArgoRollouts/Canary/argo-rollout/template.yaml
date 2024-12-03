@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: testkube-experiment-analysis
+  name: testkube-experiment-analysis-canary
   namespace: testkube-demo
 spec:
   metrics:
@@ -46,7 +46,7 @@ spec:
                     --env-id ${ENVIRONMENT_ID}
 
                   # Run the desired Testkube workflows during the experiment
-                  testkube run tw basic-k6-workflow -f || exit 1
+                  testkube run tw nginx-curl-3 -f || exit 1
 
               restartPolicy: Never
           backoffLimit: 2

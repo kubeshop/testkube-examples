@@ -3,8 +3,6 @@ apiVersion: testworkflows.testkube.io/v1
 metadata:
   name: basic-k6-workflow
   namespace: testkube-demo
-  labels:
-    docs: example
 spec:
   content:
     files:
@@ -13,7 +11,7 @@ spec:
         import http from 'k6/http';
         import { sleep } from 'k6';
         export default function () {
-            http.get('https://argocd-demo.testkube.dev');
+            http.get('https://argo-rollouts-canary.testkube.dev');
             sleep(1);
         };
   steps:

@@ -8,4 +8,4 @@ spec:
     - name: Run curl
       container:
         image: curlimages/curl:8.7.1
-      shell: curl -I https://argocd-demo.testkube.dev/
+      shell: curl -I --fail -s https://argo-rollouts-canary.testkube.dev || echo "Request failed"

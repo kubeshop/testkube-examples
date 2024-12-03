@@ -9,10 +9,10 @@ spec:
     canary:
       analysis:
         templates:
-          - templateName: testkube-experiment-analysis
+          - templateName: testkube-experiment-analysis-canary
       steps:
       - setWeight: 30
-      - pause: {duration: 1m}
+      - pause: {duration: 2m}
       - setWeight: 100
   revisionHistoryLimit: 2
   selector:
@@ -29,3 +29,75 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-canary
+  namespace: testkube-demo
+spec:
+  selector:
+    app: rollout-canary
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-canary
+  namespace: testkube-demo
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: yuliapjv/custom-nginx:1.0
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress-canary
+  namespace: testkube-demo
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-edge
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'false'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - argo-rollouts-canary.testkube.dev
+      secretName: argocd-rollouts-canary-tls
+  rules:
+    - host: argo-rollouts-canary.testkube.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service-canary
+                port:
+                  number: 80
