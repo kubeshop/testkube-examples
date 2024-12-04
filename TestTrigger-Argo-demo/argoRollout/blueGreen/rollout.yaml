@@ -7,7 +7,7 @@ spec:
   replicas: 1
   strategy:
     blueGreen:
-      activeService: nginx-service
+      activeService: nginx-service-bg
       autoPromotionEnabled: false
       prePromotionAnalysis:
         templates:
@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: rollouts-bg
-          image: yuliapjv/custom-nginx:1.0
+          image: yuliapjv/nginx-bluegreen:1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -41,6 +41,7 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
