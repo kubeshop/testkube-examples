@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: yuliapjv/custom-nginx:1.0
+          image: yuliapjv/custom-nginx:2.0
           ports:
             - containerPort: 80
           resources:
