@@ -2,10 +2,21 @@ apiVersion: testworkflows.testkube.io/v1
 kind: TestWorkflow
 metadata:
   name: curl-success
-  namespace: testkube-demo
 spec:
+  container:
+    resources:
+      requests:
+        cpu: 32m
+        memory: 32Mi
   steps:
-    - name: Run curl
-      container:
-        image: curlimages/curl:8.7.1
-      shell: curl -I --fail -s https://app.testkube.io || echo "Request failed"
+    - name: Run tests
+      parallel:
+        matrix:
+          url:
+            [
+                "https://testkube-test-page-lipsum.pages.dev/",
+                "https://docs.testkube.io",
+            ]
+        shell: curl -f -LI '{{ matrix.url }}'
+        container:
+          image: curlimages/curl:8.7.1
