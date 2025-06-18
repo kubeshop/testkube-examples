@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+ name: configmap-webhook-sensor
+ namespace: argo-events
+spec:
+ template:
+   serviceAccountName: argo-events-sa
+   container:
+     resources:
+       requests:
+         cpu: "100m"
+         memory: "128Mi"
+       limits:
+         cpu: "500m"
+         memory: "512Mi"
+ eventBusName: default
+ dependencies:
+ - name: configmap-dep
+   eventSourceName: configmap-eventsource
+   eventName: demo-configmap
+   filters:
+     data:
+     - path: body.metadata.labels.watch
+       type: string
+       value:
+       - "true"
+ triggers:
+ - template:
+     name: testkube-webhook-trigger
+     conditions: "configmap-dep"
+     http:
+       url: https://api.testkube.io/organizations/tkcorg_b8ddc820d4919590/environments/tkcenv_94cb6305570f69bd/agent/test-workflows/configmap-k6/executions
+       payload:
+       - src:
+           dependencyName: configmap-dep
+           dataKey: body.metadata.name
+         dest: tags.ArgoEventConfigMapUpdate
+       method: POST
+       headers:
+         Content-Type: application/json
+       secureHeaders:
+         - name: Authorization
+           valueFrom:
+             secretKeyRef:
+               name: testkube-auth-secret
+               key: TESTKUBE_API_TOKEN
+     retryStrategy:
+       steps: 3
+       duration: 10s
+       backoff:
+         duration: 6s
+         factor: 2
+         jitter: 0.1
+
