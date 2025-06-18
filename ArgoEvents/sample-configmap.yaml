@@ -1,0 +1,12 @@
+# sample-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+  namespace: default
+  labels:
+    watch: "true"
+    component: "testkube"
+data:
+  key: initial-value-1
+

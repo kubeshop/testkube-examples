@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+ name: configmap-eventsource
+ namespace: argo-events
+spec:
+ template:
+   serviceAccountName: argo-events-sa
+   container:
+     resources:
+       requests:
+         cpu: "100m"
+         memory: "128Mi"
+       limits:
+         cpu: "500m"
+         memory: "512Mi"
+ eventBusName: default
+ resource:
+   demo-configmap:
+     namespace: default
+     group: ""
+     version: v1
+     resource: configmaps
+     eventTypes:
+       - ADD
+       - UPDATE
+       - DELETE
+     filter:
+       labels:
+         - key: watch
+           value: "true"
