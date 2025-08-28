@@ -24,3 +24,4 @@ Follow these steps to set up and configure the K6 test workflow with ArgoCD:
 3. After the application is created, sync it with your repository to deploy the workflow.
 4. Monitor the deployment using ArgoCD’s web UI or CLI.
 5. Once the workflow is deployed, you can trigger the test workflow using testkube cli or dashboard.
+.
