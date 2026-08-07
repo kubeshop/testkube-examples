@@ -83,7 +83,3 @@ After running the TestWorkflow, `promptfoo/report.json` contains:
 ```
 
 Testkube stores the full report as a downloadable artifact.
-
-## License
-
-MIT
