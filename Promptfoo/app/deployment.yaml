@@ -1,0 +1,52 @@
+# Minimal Deployment + Service for FinBuddy, the Layer 4 red-team target.
+# Build and push the image from ./app first:
+#   docker build -t <your-registry>/finbuddy-demo:latest .
+#   docker push <your-registry>/finbuddy-demo:latest
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finbuddy
+  labels:
+    app: finbuddy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finbuddy
+  template:
+    metadata:
+      labels:
+        app: finbuddy
+    spec:
+      containers:
+        - name: finbuddy
+          image: finbuddy-demo:v2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-api-key
+                  key: OPENAI_API_KEY
+            - name: FINBUDDY_MODEL
+              value: "gpt-4o-mini"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finbuddy
+spec:
+  selector:
+    app: finbuddy
+  ports:
+    - port: 80
+      targetPort: 8000
