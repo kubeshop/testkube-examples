@@ -1,0 +1,80 @@
+QUICK SETUP - RAGAS RAG EVALUATION SUITE
+========================================
+
+1. EXTRACT FILES
+   - Extract the zip to your project directory
+   - Your test cases are in: tests/fixtures/rag_test_cases.yml
+
+2. INSTALL REQUIREMENTS
+   pip install -r requirements.txt
+
+3. SETUP ENVIRONMENT
+   - Copy .env.example to .env
+   - Add your Google API key to .env
+   - Get key from: https://makersuite.google.com/app/apikey
+
+4. ENSURE YOUR STRUCTURE
+   Your project should have:
+   - src/rag/rag_pipeline.py (updated with this package)
+   - src/rag/prompts.py (your existing file)
+   - tests/test_rag.py (from this package)
+   - tests/fixtures/rag_test_cases.yml (from this package)
+   - tests/conftest.py (from this package)
+
+5. RUN TESTS
+   pytest tests/test_rag.py -v
+
+6. VIEW RESULTS
+   - Per-test metrics printed during run
+   - Summary report with category breakdown at end
+   - Average scores across all tests
+
+FEATURES IN THIS PACKAGE
+========================
+
+✓ 20 pre-configured test cases with:
+  - id: unique test identifier
+  - query: user question
+  - expected_answer: ground truth
+  - retrieval_context: provided context (optional)
+  - category: test category for grouping
+
+✓ RAGAS Quality Metrics:
+  - Faithfulness (threshold: 0.80)
+  - Answer Relevancy (threshold: 0.80)
+  - Context Recall (threshold: 0.75)
+
+✓ Automatic Retry Logic
+  - Handles Google API rate limits
+  - Exponential backoff (1s, 2s, 4s)
+  - Max 3 retries per operation
+
+✓ Detailed Reporting
+  - Per-test metrics
+  - Category-grouped results
+  - Per-category averages
+  - Overall averages
+
+CUSTOMIZING YOUR TEST CASES
+============================
+
+1. Replace tests/fixtures/rag_test_cases.yml with YOUR test cases
+2. Keep the YAML format (id, query, expected_answer, retrieval_context, category)
+3. Run: pytest tests/test_rag.py -v
+
+TROUBLESHOOTING
+===============
+
+Q: GOOGLE_API_KEY not found
+A: Add your key to .env file and ensure it's in your project root
+
+Q: Tests timeout
+A: Add --timeout=300 to pytest command
+
+Q: Low RAGAS scores
+A: Check your RAG pipeline, knowledge base quality, and prompts
+
+Q: Rate limit errors
+A: Retry logic handles this, but you can increase delays in test_rag.py
+
+See README.md and QUICKSTART.md for more details.

@@ -13,3 +13,4 @@ This repository consists of all the examples used in our blog posts, articles, t
 7. [ArgoCD](https://github.com/kubeshop/testkube-examples/tree/main/ArgoCD): Example showing how to sync Test Workflows using Argo CD and executing them using post-sync-hooks.
 8. [ArgoRollouts](https://github.com/kubeshop/testkube-examples/tree/main/ArgoRollouts): Example to show how we can use Testkube Workflows to progress a new version of an application in a canary deployment.
 9. [Promptfoo](https://github.com/kubeshop/testkube-examples/tree/main/Promptfoo): Example showing how to use Testkube with Promptfoo for finding vulnerabilities in LLM applications.
+10. [Ragas](https://github.com/kubeshop/testkube-examples/tree/main/Ragas): Example showing how to evaluate your RAG pipeline quality using RAGAS metrics with Gemini.

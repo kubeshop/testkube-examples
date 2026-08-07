@@ -1,0 +1,1 @@
+ragas_eval,suite=ragas-quality-gate answer_relevancy=0.976862,answer_relevancy_max=0.990742,answer_relevancy_mean=0.977822,answer_relevancy_min=0.960454,answer_relevancy_std=0.011701,failed_tests=0.25,faithfulness=0.975,faithfulness_max=1,faithfulness_mean=0.98125,faithfulness_min=0.875,faithfulness_std=0.040685,pass_rate=96.25,passed_tests=4.75,total_tests=5
